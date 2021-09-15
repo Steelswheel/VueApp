@@ -1,4 +1,4 @@
-import axios from 'axios';
+import {API} from '@/responses/API';
 
 export const postModule = {
     state: () => ({//здесь данные, которые будут использоваться в приложении
@@ -44,38 +44,8 @@ export const postModule = {
         }
     },
     actions: {//функции, использующие внутри себя мутации, получаем данные с сервера и сохраняем данные в state
-        async fetchPosts({state, commit}) {
-            try {
-                commit('setLoading', true);
-                const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-                    params: {
-                        _page: state.page,
-                        _limit: state.limit
-                    }
-                });
-                commit('setTotalPages', Math.ceil(response.headers['x-total-count'] / state.limit));
-                commit('setPosts', response.data);
-            } catch (e) {
-                console.log(e);
-            } finally {
-                commit('setLoading', false);
-            }
-        },
-        async loadMorePosts({state, commit}) {
-            try {
-                commit('setPage', state.page += 1);
-                const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-                    params: {
-                        _page: state.page,
-                        _limit: state.limit
-                    }
-                });
-                commit('setTotalPages', Math.ceil(response.headers['x-total-count'] / state.limit));
-                commit('setPosts', [...state.posts, ...response.data]);
-            } catch (e) {
-                alert('Ошибка: ' + e);
-            }
-        }
+        fetchPosts: API.fetchPosts,
+        loadMorePosts: API.loadMorePosts,
     },
     namespaced: true
 }
