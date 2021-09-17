@@ -45,7 +45,7 @@ export const postModule = {
     },
     actions: {//функции, использующие внутри себя мутации, получаем данные с сервера и сохраняем данные в state
         fetchPosts: API.fetchPosts,
-        loadMorePosts: API.loadMorePosts,
+        loadMorePosts: API.loadMorePosts
     },
     namespaced: true
 }

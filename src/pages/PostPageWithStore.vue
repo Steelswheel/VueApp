@@ -63,7 +63,7 @@
             }
         },
         mounted() {
-            this.fetchPosts();
+            this.fetchPosts(this);
         },
         computed: {
             ...mapState({

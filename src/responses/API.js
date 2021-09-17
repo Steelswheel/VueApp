@@ -1,34 +1,34 @@
 import axios from 'axios';
 
 export const API = {
-    async fetchPosts({state, commit}) {
+    async fetchPosts({state}) {
         try {
-            commit('setLoading', true);
+            state.isPostsLoading = true;
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
                 params: {
                     _page: state.page,
                     _limit: state.limit
                 }
             });
-            commit('setTotalPages', Math.ceil(response.headers['x-total-count'] / state.limit));
-            commit('setPosts', response.data);
+            state.totalPages = Math.ceil(response.headers['x-total-count'] / state.limit);
+            state.posts = response.data;
         } catch (e) {
-            console.log(e);
+            alert('Ошибка: ' + e);
         } finally {
-            commit('setLoading', false);
+            state.isPostsLoading = false;
         }
     },
-    async loadMorePosts({state, commit}) {
+    async loadMorePosts({state}) {
         try {
-            commit('setPage', state.page += 1);
+            state.page += 1;
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
                 params: {
                     _page: state.page,
                     _limit: state.limit
                 }
             });
-            commit('setTotalPages', Math.ceil(response.headers['x-total-count'] / state.limit));
-            commit('setPosts', [...state.posts, ...response.data]);
+            state.totalPages = Math.ceil(response.headers['x-total-count'] / state.limit);
+            state.posts = [...state.posts, ...response.data];
         } catch (e) {
             alert('Ошибка: ' + e);
         }
