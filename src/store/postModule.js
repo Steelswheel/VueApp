@@ -44,20 +44,20 @@ export const postModule = {
         }
     },
     actions: {//функции, использующие внутри себя мутации, получаем данные с сервера и сохраняем данные в state
-        fetchPosts(context) {
-            context.commit('setLoading', true);
-            API.fetchPosts(context.state.page, context.state.limit).then(result => {
-                const total = Math.ceil(result.headers['x-total-count'] / context.state.limit);
-                context.commit('setTotalPages', total);
-                context.commit('setPosts', result.data);
-            }).finally(() => context.commit('setLoading', false));
+        fetchPosts({state, commit}) {
+            commit('setLoading', true);
+            API.fetchPosts(state).then(result => {
+                const total = Math.ceil(result.headers['x-total-count'] / state.limit);
+                commit('setTotalPages', total);
+                commit('setPosts', result.data);
+            }).finally(() => commit('setLoading', false));
         },
-        loadMorePosts(context) {
-            context.commit('setPage', context.state.page++);
-            API.loadMorePosts(context.state.page, context.state.limit).then(result => {
-                const total = Math.ceil(result.headers['x-total-count'] / context.state.limit);
-                context.commit('setTotalPages', total);
-                context.commit('setPosts', [...context.state.posts, ...result.data]);
+        loadMorePosts({state, commit}) {
+            commit('setPage', state.page++);
+            API.loadMorePosts(state).then(result => {
+                const total = Math.ceil(result.headers['x-total-count'] / state.limit);
+                commit('setTotalPages', total);
+                commit('setPosts', [...state.posts, ...result.data]);
             });
         }
     },

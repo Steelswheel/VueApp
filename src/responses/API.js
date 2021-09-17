@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const API = {
-    async fetchPosts(page, limit) {
+    async fetchPosts({page, limit}) {
         try {
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
                 params: {
@@ -15,7 +15,7 @@ export const API = {
             alert('Ошибка: ' + e);
         }
     },
-    async loadMorePosts(page, limit) {
+    async loadMorePosts({page, limit}) {
         try {
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
                 params: {
