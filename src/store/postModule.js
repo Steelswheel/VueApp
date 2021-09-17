@@ -44,8 +44,22 @@ export const postModule = {
         }
     },
     actions: {//функции, использующие внутри себя мутации, получаем данные с сервера и сохраняем данные в state
-        fetchPosts: API.fetchPosts,
-        loadMorePosts: API.loadMorePosts
+        fetchPosts(context) {
+            context.commit('setLoading', true);
+            API.fetchPosts(context.state.page, context.state.limit).then(result => {
+                const total = Math.ceil(result.headers['x-total-count'] / context.state.limit);
+                context.commit('setTotalPages', total);
+                context.commit('setPosts', result.data);
+            }).finally(() => context.commit('setLoading', false));
+        },
+        loadMorePosts(context) {
+            context.commit('setPage', context.state.page++);
+            API.loadMorePosts(context.state.page, context.state.limit).then(result => {
+                const total = Math.ceil(result.headers['x-total-count'] / context.state.limit);
+                context.commit('setTotalPages', total);
+                context.commit('setPosts', [...context.state.posts, ...result.data]);
+            });
+        }
     },
     namespaced: true
 }

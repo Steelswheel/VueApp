@@ -1,34 +1,30 @@
 import axios from 'axios';
 
 export const API = {
-    async fetchPosts({state}) {
+    async fetchPosts(page, limit) {
         try {
-            state.isPostsLoading = true;
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
                 params: {
-                    _page: state.page,
-                    _limit: state.limit
+                    _page: page,
+                    _limit: limit
                 }
             });
-            state.totalPages = Math.ceil(response.headers['x-total-count'] / state.limit);
-            state.posts = response.data;
+
+            return response;
         } catch (e) {
             alert('Ошибка: ' + e);
-        } finally {
-            state.isPostsLoading = false;
         }
     },
-    async loadMorePosts({state}) {
+    async loadMorePosts(page, limit) {
         try {
-            state.page += 1;
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
                 params: {
-                    _page: state.page,
-                    _limit: state.limit
+                    _page: page,
+                    _limit: limit
                 }
             });
-            state.totalPages = Math.ceil(response.headers['x-total-count'] / state.limit);
-            state.posts = [...state.posts, ...response.data];
+
+            return response;
         } catch (e) {
             alert('Ошибка: ' + e);
         }
